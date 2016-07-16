@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +53,7 @@ public class SecondFrag extends Fragment {
             llPointGroup.addView(point);
         }
         mViewpager.setAdapter(new MyAdapter());
-
         mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -63,7 +62,7 @@ public class SecondFrag extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                int newPosition = position;
+                int newPosition = position % imageViewList.size();
                 tvImageDescription.setText(imageDescriptions[newPosition]);
                 llPointGroup.getChildAt(previousPosition).setEnabled(false);
                 llPointGroup.getChildAt(newPosition).setEnabled(true);
@@ -78,6 +77,10 @@ public class SecondFrag extends Fragment {
 
         llPointGroup.getChildAt(previousPosition).setEnabled(true);
         tvImageDescription.setText(imageDescriptions[previousPosition]);
+
+        int m = (Integer.MAX_VALUE / 2) % imageViewList.size();// 余数
+        int currentPosition = Integer.MAX_VALUE / 2 - m;
+        mViewpager.setCurrentItem(currentPosition);
         return view;
     }
 
@@ -85,7 +88,7 @@ public class SecondFrag extends Fragment {
 
         @Override
         public int getCount() {
-            return imageViewList.size();
+            return Integer.MAX_VALUE;
         }
 
         @Override
@@ -95,14 +98,14 @@ public class SecondFrag extends Fragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = imageViewList.get(position);
+            ImageView imageView = imageViewList.get(position % imageViewList.size());
             mViewpager.addView(imageView);
             return imageView;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            mViewpager.removeView(imageViewList.get(position));
+            mViewpager.removeView(imageViewList.get(position % imageViewList.size()));
         }
     }
 }
