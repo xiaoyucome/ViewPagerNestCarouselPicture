@@ -1,6 +1,7 @@
 package lxy.github.viewpager.nest.carouse.picture;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -24,6 +25,8 @@ public class SecondFrag extends Fragment {
     private String[] imageDescriptions;//图片信息描述
     private List<ImageView> imageViewList = new ArrayList<>(); // Viewpager的数据
     private int previousPosition = 0; // 前一个被选中的position --> 记录位置
+    private boolean isStop = false;
+
 
     @Nullable
     @Override
@@ -81,6 +84,24 @@ public class SecondFrag extends Fragment {
         int m = (Integer.MAX_VALUE / 2) % imageViewList.size();// 余数
         int currentPosition = Integer.MAX_VALUE / 2 - m;
         mViewpager.setCurrentItem(currentPosition);
+
+        /**
+         * 自动轮播
+         * 每隔5秒钟, 来切换一张图片
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!isStop) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            mViewpager.setCurrentItem(mViewpager.getCurrentItem() + 1);
+                        }
+                    });
+                    SystemClock.sleep(5000);
+                }
+            }
+        }).start();
         return view;
     }
 
@@ -107,5 +128,11 @@ public class SecondFrag extends Fragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             mViewpager.removeView(imageViewList.get(position % imageViewList.size()));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isStop = true;
     }
 }
