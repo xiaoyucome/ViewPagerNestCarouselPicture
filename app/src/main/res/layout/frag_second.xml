@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <lxy.github.viewpager.nest.carouse.picture.RollViewPager
         android:id="@+id/viewpager"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"></android.support.v4.view.ViewPager>
+        android:layout_height="200dp"></lxy.github.viewpager.nest.carouse.picture.RollViewPager>
 
     <LinearLayout
         android:layout_width="fill_parent"

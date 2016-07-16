@@ -1,12 +1,8 @@
 package lxy.github.viewpager.nest.carouse.picture;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,7 @@ import java.util.List;
 
 public class SecondFrag extends Fragment {
 
-    private ViewPager mViewpager;
+    private RollViewPager mViewpager;
     private LinearLayout llPointGroup;
     private TextView tvImageDescription;
     private String[] imageDescriptions;//图片信息描述
@@ -27,12 +23,11 @@ public class SecondFrag extends Fragment {
     private int previousPosition = 0; // 前一个被选中的position --> 记录位置
     private boolean isStop = false;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_second, null);
-        mViewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        mViewpager = (RollViewPager) view.findViewById(R.id.viewpager);
         tvImageDescription = (TextView) view.findViewById(R.id.tv_image_description);
         llPointGroup = (LinearLayout) view.findViewById(R.id.ll_point_group);
 
@@ -55,84 +50,86 @@ public class SecondFrag extends Fragment {
             point.setLayoutParams(params);
             llPointGroup.addView(point);
         }
-        mViewpager.setAdapter(new MyAdapter());
-        mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewpager.setResource(imageViewList, imageDescriptions, tvImageDescription, llPointGroup);
+//        mViewpager.setAdapter(new RollViewPager.MyAdapter());
+        mViewpager.startRoll();
+//        mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                int newPosition = position % imageViewList.size();
+//                tvImageDescription.setText(imageDescriptions[newPosition]);
+//                llPointGroup.getChildAt(previousPosition).setEnabled(false);
+//                llPointGroup.getChildAt(newPosition).setEnabled(true);
+//                previousPosition = newPosition;
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//        llPointGroup.getChildAt(previousPosition).setEnabled(true);
+//        tvImageDescription.setText(imageDescriptions[previousPosition]);
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                int newPosition = position % imageViewList.size();
-                tvImageDescription.setText(imageDescriptions[newPosition]);
-                llPointGroup.getChildAt(previousPosition).setEnabled(false);
-                llPointGroup.getChildAt(newPosition).setEnabled(true);
-                previousPosition = newPosition;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        llPointGroup.getChildAt(previousPosition).setEnabled(true);
-        tvImageDescription.setText(imageDescriptions[previousPosition]);
-
-        int m = (Integer.MAX_VALUE / 2) % imageViewList.size();// 余数
-        int currentPosition = Integer.MAX_VALUE / 2 - m;
-        mViewpager.setCurrentItem(currentPosition);
+//        int m = (Integer.MAX_VALUE / 2) % imageViewList.size();// 余数
+//        int currentPosition = Integer.MAX_VALUE / 2 - m;
+//        mViewpager.setCurrentItem(currentPosition);
 
         /**
          * 自动轮播
          * 每隔5秒钟, 来切换一张图片
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!isStop) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            mViewpager.setCurrentItem(mViewpager.getCurrentItem() + 1);
-                        }
-                    });
-                    SystemClock.sleep(5000);
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (!isStop) {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            mViewpager.setCurrentItem(mViewpager.getCurrentItem() + 1);
+//                        }
+//                    });
+//                    SystemClock.sleep(5000);
+//                }
+//            }
+//        }).start();
         return view;
     }
 
-    class MyAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return Integer.MAX_VALUE;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = imageViewList.get(position % imageViewList.size());
-            mViewpager.addView(imageView);
-            return imageView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            mViewpager.removeView(imageViewList.get(position % imageViewList.size()));
-        }
-    }
+//    class MyAdapter extends PagerAdapter {
+//
+//        @Override
+//        public int getCount() {
+//            return Integer.MAX_VALUE;
+//        }
+//
+//        @Override
+//        public boolean isViewFromObject(View view, Object object) {
+//            return view == object;
+//        }
+//
+//        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            ImageView imageView = imageViewList.get(position % imageViewList.size());
+//            mViewpager.addView(imageView);
+//            return imageView;
+//        }
+//
+//        @Override
+//        public void destroyItem(ViewGroup container, int position, Object object) {
+//            mViewpager.removeView(imageViewList.get(position % imageViewList.size()));
+//        }
+//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isStop = true;
+//        isStop = true;
     }
 }
